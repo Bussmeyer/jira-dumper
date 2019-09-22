@@ -5,6 +5,8 @@
   "scripts": {
     "test": "echo \"No tests yet...\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "jira-client": "^6.11.0"
+  },
   "devDependencies": {}
 }

@@ -1,3 +1,5 @@
+const config = require('../config');
+const loggy = require('../lib/loggy');
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 

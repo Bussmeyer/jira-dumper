@@ -8,7 +8,6 @@ var config = {
     sprintIssues: 'data/issues/jira-sprint-issues',
     merged: 'data/jira-merged',
   },
-  rapidViewId: 1234,
   startAt: 0,
   maxResults: 50,
   state: 'closed',

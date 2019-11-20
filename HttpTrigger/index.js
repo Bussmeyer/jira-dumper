@@ -1,18 +1,57 @@
 const config = require('../config');
 const loggy = require('../lib/loggy');
+const jira = require('../lib/jira');
+
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
-    if (req.query.name || (req.body && req.body.name)) {
-        context.res = {
-            // status: 200, /* Defaults to 200 */
-            body: "Hello " + (req.query.name || req.body.name)
-        };
-    }
-    else {
-        context.res = {
-            status: 400,
-            body: "Please pass a name on the query string"
-        };
-    }
+    test = jira.getAllSprints(
+        config.rapidViewId,
+        config.startAt,
+        config.maxResults,
+        config.state
+      )
+      .then(function(sprints) {
+        loggy(sprints);
+      
+        const fields = [
+          {
+            label: 'id',
+            value: 'values.id',
+          },
+          {
+            label: 'url',
+            value: 'values.self'
+          },
+          {
+            label: 'state',
+            value: 'values.state'
+          },
+          {
+            label: 'name',
+            value: 'values.name'
+          },
+          {
+            label: 'startDate',
+            value: 'values.startDate'
+          },
+          {
+            label: 'endDate',
+            value: 'values.endDate'
+          },
+          {
+            label: 'completeDate',
+            value: 'values.completeDate'
+          },
+          {
+            label: 'originBoardId',
+            value: 'values.originBoardId'
+          },
+        ];
+      
+        return sprints
+      })
+      .catch(function(err) {
+        console.error(err);
+      });
 };

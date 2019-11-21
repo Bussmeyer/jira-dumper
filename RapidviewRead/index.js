@@ -1,5 +1,4 @@
 const config = require('../config');
-const loggy = require('../lib/loggy');
 const jira = require('../lib/jira');
 var DataTransform = require("node-json-transform").DataTransform;
 var rp = require('request-promise');

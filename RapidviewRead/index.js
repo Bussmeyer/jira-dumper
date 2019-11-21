@@ -17,7 +17,25 @@ module.exports = async function (context, req) {
   } else {
     // Get all sprints of a given rapidView
     const sprints = await getAllSprints(rapidViewId);
-    console.log(sprints);
+    
+    await Promise.all(
+      sprints.map(async (sprint) => {
+        const sprintWithVelocity = await jira.getSprintIssues(rapidViewId, sprint.id)
+        .then(function(sprintIssues) {
+          var sprintWithVelocity = new Object();
+          sprintWithVelocity.id = sprintIssues.sprint.id;
+          sprintWithVelocity.name = sprintIssues.sprint.name;
+          sprintWithVelocity.committed = sprintIssues.contents.issuesNotCompletedInitialEstimateSum.value + sprintIssues.contents.completedIssuesInitialEstimateSum.value;
+          sprintWithVelocity.completed = sprintIssues.contents.completedIssuesEstimateSum.value;
+          return sprintWithVelocity;
+        });
+        return sprintWithVelocity;
+      })
+    )
+    .then(function(sprintsWithVelocity) {
+      console.log(sprintsWithVelocity);
+      console.log("Fertig");
+    });
   } 
 };
 

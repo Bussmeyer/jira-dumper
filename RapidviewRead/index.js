@@ -15,29 +15,9 @@ module.exports = async function (context, req) {
       body: "Please pass a rapidViewId on the query string"
     };
   } else {
-    const sprints = await jira.getAllSprints(
-      rapidViewId,
-      config.startAt,
-      config.maxResults,
-      'closed'
-    )
-    .then(function (sprints) {
-      return sprints
-    })
-    .catch(function (err) {
-        console.error(err);
-    });
+    // Get all sprints of a given rapidView
+    const sprints = await getAllSprints(rapidViewId);
 
-    // flatten the sprint results and only 2 attributes
-    var map = {
-      list : 'values',
-      item: {
-          id: "id",
-          name: "name",
-      }
-    }
-    var dataTransform = DataTransform(sprints, map);
-    var result = dataTransform.transform();
       
     // Create a request object and post it to power bi
     const buffer = Buffer.from(typeof result === 'string' ? 'result' : JSON.stringify(result));
@@ -57,3 +37,26 @@ module.exports = async function (context, req) {
       });
   }
 };
+
+async function getAllSprints(rapidViewId) {
+  // flatten the sprint results and only 2 attributes
+  var map = {
+    list : 'values',
+    item: {
+        id: "id",
+        name: "name",
+    }
+  }
+
+  return await jira.getAllSprints(rapidViewId, 0, 50, 'closed')
+    .then(function (sprints) {
+      var dataTransform = DataTransform(sprints, map);
+      var sprintsCore = dataTransform.transform();
+
+      return sprintsCore;
+    })
+    .catch(function (err) {
+      console.error(err);
+    });
+}
+

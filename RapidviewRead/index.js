@@ -17,25 +17,8 @@ module.exports = async function (context, req) {
   } else {
     // Get all sprints of a given rapidView
     const sprints = await getAllSprints(rapidViewId);
-
-      
-    // Create a request object and post it to power bi
-    const buffer = Buffer.from(typeof result === 'string' ? 'result' : JSON.stringify(result));
-    var options = {
-      method: 'POST',
-      uri: config.powerbiAPI,
-      body: buffer,
-    };
-
-    rp(options)
-      .then(function (parsedBody) {
-        console.log('Hello Request to Power BI, yes');
-
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  }
+    console.log(sprints);
+  } 
 };
 
 async function getAllSprints(rapidViewId) {
@@ -58,5 +41,4 @@ async function getAllSprints(rapidViewId) {
     .catch(function (err) {
       console.error(err);
     });
-}
-
+};

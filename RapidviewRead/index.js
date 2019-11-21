@@ -8,8 +8,13 @@ module.exports = async function (context, req) {
   context.log('JavaScript HTTP trigger function processed a request.');
 
   const rapidViewId = req.params.id;
-
-  if (rapidViewId) {
+  if (!rapidViewId) {
+    // fail early :-)
+    context.res = {
+      status: 400,
+      body: "Please pass a rapidViewId on the query string"
+    };
+  } else {
     const sprints = await jira.getAllSprints(
       rapidViewId,
       config.startAt,
@@ -23,18 +28,19 @@ module.exports = async function (context, req) {
         console.error(err);
     });
 
+    // flatten the sprint results and only 2 attributes
     var map = {
       list : 'values',
       item: {
           id: "id",
           name: "name",
       }
-    }  
-    
+    }
     var dataTransform = DataTransform(sprints, map);
     var result = dataTransform.transform();
+      
+    // Create a request object and post it to power bi
     const buffer = Buffer.from(typeof result === 'string' ? 'result' : JSON.stringify(result));
-
     var options = {
       method: 'POST',
       uri: config.powerbiAPI,
@@ -49,12 +55,5 @@ module.exports = async function (context, req) {
       .catch(function (err) {
         console.log(err);
       });
-
-  }
-  else {
-    context.res = {
-      status: 400,
-      body: "Please pass a rapidViewId on the query string"
-    };
   }
 };

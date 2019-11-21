@@ -6,7 +6,9 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "jira-client": "^6.11.0"
+    "jira-client": "^6.11.0",
+    "node-json-transform": "^1.0.19",
+    "request-promise": "^4.2.5"
   },
   "devDependencies": {}
 }

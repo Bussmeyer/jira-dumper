@@ -3,6 +3,7 @@ var config = {
   jiraHost: 'host.to.jira.without.https://',
   jiraUsername: 'user',
   jiraPassword: 'password',
+  powerbiAPI: 'https://',
   outputFile: {
     sprints: 'data/jira-sprints',
     sprintIssues: 'data/issues/jira-sprint-issues',
@@ -10,8 +11,6 @@ var config = {
   },
   startAt: 0,
   maxResults: 50,
-  state: 'closed',
-
 };
 
 module.exports = config;

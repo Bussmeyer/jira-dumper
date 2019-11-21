@@ -35,6 +35,23 @@ module.exports = async function (context, req) {
     .then(function(sprintsWithVelocity) {
       console.log(sprintsWithVelocity);
       console.log("Fertig");
+
+      // Create a request object and post it to power bi
+      const buffer = Buffer.from(typeof sprintsWithVelocity === 'string' ? 'sprintsWithVelocity' : JSON.stringify(sprintsWithVelocity));
+      var options = {
+        method: 'POST',
+        uri: config.powerbiAPI,
+        body: buffer,
+      };
+
+      rp(options)
+        .then(function (parsedBody) {
+          console.log('Hello Request to Power BI, yes');
+
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     });
   } 
 };
